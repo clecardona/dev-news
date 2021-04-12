@@ -25,8 +25,10 @@ public class CommentsController {
 
     //methods GET
 
-    /*
-    return all comments
+    /**
+     * return all comments
+     *
+     * @return action performed
      */
     @GetMapping("/comments")
     public List<Comments> listAllComments() {
@@ -34,35 +36,53 @@ public class CommentsController {
     }
 
 
+    /**
+     * return comment on a given Id.
+     *
+     * @param id given id
+     * @return the comment
+     */
     @GetMapping("/comments/{id}")
 
-    public Comments getCommentById(@PathVariable Long id){
+    public Comments getCommentById(@PathVariable Long id) {
         return commentsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
 
+    /**
+     * return all comments on article given by articleId.
+     *
+     * @param articleId given article id.
+     * @return the comments requested
+     */
+    @GetMapping("/articles/{articleId}/comments")
+    public List<Comments> getCommentsByID(@PathVariable Long articleId) {
 
-  @GetMapping("/articles/{articleId}/comments")
-
-    public List<Comments> getCommentsByID(@PathVariable Long articleId){
-
-      Articles article = articlesRepository.findById(articleId).orElseThrow(ResourceNotFoundException::new);
-       return article.getComments();
+        Articles article = articlesRepository.findById(articleId).orElseThrow(ResourceNotFoundException::new);
+        return article.getComments();
 
     }
 
-
+    /**
+     * return all comments made by author given by authorName.
+     *
+     * @param authorName the requested authorName
+     * @return the requested comments
+     */
     @GetMapping(value = "/comments", params = {"authorName"})
-
-    public List<Comments> getCommentsByAuthorName(@RequestParam String authorName){
+    public List<Comments> getCommentsByAuthorName(@RequestParam String authorName) {
         return commentsRepository.findByAuthorName(authorName);
 
     }
 
     //methods POST
 
-    /*
-     * post a new comment related to a specific aricleId
+    /**
+     * create a new comment on article given by articleId.
+     *
+     * @param articleId the article to comment
+     * @param comment   the comment
+     * @return action processed
      */
     @PostMapping("/articles/{articleId}/comments")
     public ResponseEntity<Comments> createComment(@PathVariable Long articleId, @RequestBody Comments comment) {
@@ -78,11 +98,16 @@ public class CommentsController {
 
     //methods PUT
 
-    /*
-    update the given comment.
+
+    /**
+     * update the given comment.
+     *
+     * @param id        the given id
+     * @param upComment the updated  comment
+     * @return action processed
      */
-    @PutMapping ("/comments/{id}")
-    public ResponseEntity<Comments> updateCommentById(@PathVariable Long id, @Valid @RequestBody Comments upComment){
+    @PutMapping("/comments/{id}")
+    public ResponseEntity<Comments> updateCommentById(@PathVariable Long id, @Valid @RequestBody Comments upComment) {
         Comments comment = commentsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         upComment.setRelatedArticle(comment.getRelatedArticle());//persist the related article
         upComment.setId(id);//
@@ -93,12 +118,15 @@ public class CommentsController {
 
     //methods DELETE
 
-    /*
-    delete the given comment.
+    /**
+     * delete the given comment.
+     *
+     * @param id the given id
+     * @return action processed
      */
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Comments> deleteCommentById(@PathVariable Long id){
-        Comments comment= commentsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+    public ResponseEntity<Comments> deleteCommentById(@PathVariable Long id) {
+        Comments comment = commentsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         commentsRepository.delete(comment);
 
         return ResponseEntity.ok(comment);

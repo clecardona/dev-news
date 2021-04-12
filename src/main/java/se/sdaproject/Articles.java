@@ -6,7 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 public class Articles {
@@ -27,9 +27,9 @@ public class Articles {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Comments> comments;
 
-    @ManyToMany(mappedBy = "articleList")
+    @ManyToMany(mappedBy = "articles")
     @JsonIgnore
-    private Set<Topics> topics;
+    private List<Topics> topics;
 
 
 
@@ -46,7 +46,6 @@ public class Articles {
     }
 
     //getters and setters
-
 
     public long getId() {
         return id;
@@ -88,11 +87,11 @@ public class Articles {
         this.comments = comments;
     }
 
-    public Set<Topics> getTopics() {
+    public List<Topics> getTopics() {
         return topics;
     }
 
-    public void setTopics(Set<Topics> topics) {
+    public void setTopics(List<Topics> topics) {
         this.topics = topics;
     }
 }

@@ -1,15 +1,15 @@
 package se.sdaproject;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 public class Topics {
 
 
-    // fields : id, name, articleList
+    // fields : id, name, articles
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -18,14 +18,13 @@ public class Topics {
 
 
     @ManyToMany
-    private Set<Articles> articleList;
+    private List<Articles> articles;
 
     //constructor
 
 
 
     //getters and setters
-
 
     public long getId() {
         return id;
@@ -43,11 +42,11 @@ public class Topics {
         this.name = name;
     }
 
-    public Set<Articles> getArticleList() {
-        return articleList;
+    public List<Articles> getArticles() {
+        return articles;
     }
 
-    public void setArticleList(Set<Articles> articleList) {
-        this.articleList = articleList;
+    public void setArticles(List<Articles> articles) {
+        this.articles = articles;
     }
 }

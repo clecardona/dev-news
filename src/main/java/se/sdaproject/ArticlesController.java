@@ -22,11 +22,21 @@ public class ArticlesController {
 
 
     //methods GET
+
+    /**
+     * returns all articles.
+     * @return all articles
+     */
     @GetMapping
     public List<Articles> listAllArticles() {
         return articlesRepository.findAll();
     }
 
+    /**
+     * return a specific article based on the provided id
+     * @param id provided id
+     * @return action performed
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Articles> getArticleById(@PathVariable Long id) {
 
@@ -36,6 +46,12 @@ public class ArticlesController {
 
 
     //methods POST
+
+    /**
+     * create a new article.
+     * @param article article to be posted
+     * @return action performed
+     */
     @PostMapping
     public ResponseEntity<Articles> createArticle(@RequestBody Articles article) {
         articlesRepository.save(article);
@@ -45,6 +61,13 @@ public class ArticlesController {
 
 
     //methods PUT
+
+    /**
+     * update the given article.
+     * @param id given ID
+     * @param updatedArticle new article
+     * @return action performed
+     */
     @PutMapping ("/{id}")
     public ResponseEntity<Articles> updateArticleById(@PathVariable Long id, @RequestBody Articles updatedArticle ){
         articlesRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
@@ -55,6 +78,12 @@ public class ArticlesController {
 
 
     //methods DELETE
+
+    /**
+     * delete the given article
+     * @param id given id
+     * @return action performed
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Articles> deleteArticleById(@PathVariable Long id){
         Articles article= articlesRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
