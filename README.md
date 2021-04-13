@@ -51,10 +51,10 @@ We want to categorize our articles by topics. Each topic can be applied to zero 
 | ------------|-----------|--------|--------|
 | `GET`    | `/topics` | return all topics. |**OK** |
 | `GET`    | `/articles/{articleId}/topics` | return all topics associated with article given by `articleId`. |**OK** |
-| `POST`   | `/articles/{articleId}/topics` | associate the topic with the article given by `articleId`. If topic does not already exist, it is created. |**OK , but duplicates to be fixed** |
+| `POST`   | `/articles/{articleId}/topics` | associate the topic with the article given by `articleId`. If topic does not already exist, it is created. |**OK** |
 | `POST`   | `/topics` | create a new topic. |**OK** |
 | `PUT`    | `/topics/{id}` | update the given topic. |**OK** |
-| `DELETE` | `/topics/{id}` | delete the given topic. |**TODO** |
+| `DELETE` | `/topics/{id}` | delete the given topic. |**OK** |
 | `DELETE` | `/articles/{articleId}/topics/{topicId}` | delete the association of a topic for the given article. The topic & article themselves remain. |**OK** |
 | `GET`    | `/topics/{topicId}/articles` | return all articles associated with the topic given by `topicId`. |**OK** |
 

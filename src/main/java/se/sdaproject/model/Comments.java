@@ -20,6 +20,7 @@ public class Comments {
     @NotNull
     @NotBlank
     private String body;
+
     @Column(nullable = false)
     @NotNull
     @NotBlank
@@ -29,6 +30,7 @@ public class Comments {
     @ManyToOne
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
+
     @JoinColumn(nullable = false)
     @NotNull
     private Articles relatedArticle;

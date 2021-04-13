@@ -1,6 +1,9 @@
 package se.sdaproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,7 +15,7 @@ import java.util.List;
 @Entity
 public class Topics {
 
-    // todo - make associated tables visible
+
 
     // fields : id, name, articles
     @Id
@@ -23,7 +26,10 @@ public class Topics {
 
 
     @ManyToMany (mappedBy = "topics")
-    @JsonIgnore
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Articles> articles;
 

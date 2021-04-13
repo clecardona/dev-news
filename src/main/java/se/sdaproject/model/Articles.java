@@ -1,6 +1,9 @@
 package se.sdaproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +13,6 @@ import java.util.List;
 public class Articles {
 
 
-    // todo - make associated tables visible
 
 
     // fields : id, title, body , authorName.
@@ -25,11 +27,19 @@ public class Articles {
 
 
     @OneToMany(mappedBy = "relatedArticle", cascade = CascadeType.ALL)
-    @JsonIgnore
+
+    @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
+    @JsonIdentityReference(alwaysAsId = false)
+
     private List<Comments> comments;
 
+
+
     @ManyToMany(cascade = CascadeType.ALL) //  owning side
-    @JsonIgnore
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    //@JsonIgnore
     private List<Topics> topics;
 
 

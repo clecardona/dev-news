@@ -40,13 +40,14 @@ public class TopicsController {
     }
 
 
-/**
+    /**
      * return all topics associated with article given by articleId.
+     *
      * @return all topics
      */
 
     @GetMapping("/articles/{articleId}/topics")
-    public List<Topics> getTopicsFromArticleId( @PathVariable long articleId) {
+    public List<Topics> getTopicsFromArticleId(@PathVariable long articleId) {
         Articles article = articlesRepository
                 .findById(articleId)
                 .orElseThrow(ResourceNotFoundException::new); // get the article
@@ -55,22 +56,20 @@ public class TopicsController {
     }
 
 
-
-/**
+    /**
      * return all articles associated with the topic given by topicId.
+     *
      * @return all articles
      */
 
     @GetMapping("/topics/{topicId}/articles")
-    public List<Articles> getArticlesFromTopicId( @PathVariable long topicId) {
+    public List<Articles> getArticlesFromTopicId(@PathVariable long topicId) {
         Topics topic = topicsRepository
                 .findById(topicId)
                 .orElseThrow(ResourceNotFoundException::new); // get the topic
 
         return topic.getArticles();
     }
-
-
 
 
     //methods POST
@@ -81,24 +80,23 @@ public class TopicsController {
      * @param topic the topic to be added
      * @return process result
      */
-    // todo - fix duplication
+
     @PostMapping("/topics")
     public ResponseEntity<Topics> createTopic(@RequestBody Topics topic) {
 
         List<Topics> topicList = topicsRepository.findAll();
-        boolean topicExists =false;
-
-        for (Topics t:topicList) {
-            if (t.getName().equals(topic.getName())) {
-                topicExists = true;
+        boolean topicExists = true;
+        for (Topics t : topicList) {
+            if (!(t.getName().equals(topic.getName()))) {
+                topicExists = false;
                 break;
             }
         }
-
-        if (!topicExists){
+        if (!topicExists) {
             topicsRepository.save(topic);// topic does not exists , create it.
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(topic);
         }
-
         return ResponseEntity.status(HttpStatus.CREATED).body(topic);
     }
 
@@ -107,7 +105,7 @@ public class TopicsController {
      * If topic does not already exist, it is created.
      *
      * @param articleId the article related
-     * @param topic topic to associate
+     * @param topic     topic to associate
      * @return result of process
      */
 
@@ -145,10 +143,10 @@ public class TopicsController {
 
     //methods PUT
 
-/**
+    /**
      * update the given topic.
      *
-     * @param id  the given id
+     * @param id      the given id
      * @param upTopic the updated  comment
      * @return action processed
      */
@@ -170,6 +168,7 @@ public class TopicsController {
 
     /**
      * delete the given topic.
+     *
      * @param id the given id
      */
 
@@ -182,8 +181,9 @@ public class TopicsController {
 
     /**
      * Delete the association of a topic for the given article.The topic & article themselves remain.
-     * @param articleId id of the article ro unassociate.
-     * @param topicId id of the topic to unassociate.
+     *
+     * @param articleId id of the article to be unassociated
+     * @param topicId   id of the topic to be unassociated.
      */
     @DeleteMapping("/articles/{articleId}/topics/{topicId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -191,12 +191,12 @@ public class TopicsController {
 
         Articles article = articlesRepository.findById(articleId).orElseThrow(ResourceNotFoundException::new);
         Topics topic = topicsRepository.findById(topicId).orElseThrow(ResourceNotFoundException::new);
-        if ( article.getTopics().contains(topic)){
+        if (article.getTopics().contains(topic)) {
             article.getTopics().remove(topic);
             articlesRepository.save(article);
 
-        }else{
-            throw  new ResourceNotFoundException();
+        } else {
+            throw new ResourceNotFoundException();
         }
     }
 
