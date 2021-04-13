@@ -3,6 +3,7 @@ package se.sdaproject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.sdaproject.api.exception.ResourceNotFoundException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,7 +37,7 @@ public class TopicsController {
 
 
 /**
-     * todo -return all topics associated with article given by articleId.
+     * todo - return all topics associated with article given by articleId.
      * @return all topics
      */
 
@@ -71,48 +72,60 @@ public class TopicsController {
     //methods POST
 
     /**
-     * add a topic todo-not adding if topic already exists
+     * create a new topic. duplicate names not allowed.
      *
      * @param topic
-     * @return aaa
+     * @return process result
      */
     @PostMapping("/topics")
     public ResponseEntity<Topics> createTopic(@RequestBody Topics topic) {
-        if(!topicsRepository.findAll().contains(topic)){
-            topicsRepository.save(topic);
+
+        List<Topics> topicList = topicsRepository.findAll();
+        boolean topicExists =false;
+
+        for (Topics t:topicList) {
+            if (t.getName().equals(topic.getName())) {
+                topicExists = true;
+                break;
+            }
+        }
+
+        if (!topicExists){
+            topicsRepository.save(topic);// topic does not exists , create it.
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(topic);
     }
 
+    /**
+     * associate the topic with the article given by articleId.
+     * If topic does not already exist, it is created.
+     *
+     * @param articleId the article related
+     * @param topic topic to associate
+     * @return result of process
+     */
 
     @PostMapping("/articles/{articleId}/topics")
-
-    /*todo-associate the topic with the article given by articleId.
-       If topic does not already exist, it is created.
-       - NOT WORKING -
-       */
 
     public ResponseEntity<Topics> associateTopic(@PathVariable Long articleId, @Valid @RequestBody Topics topic) {
 
         Articles article = articlesRepository
                 .findById(articleId)
                 .orElseThrow(ResourceNotFoundException::new);
+        //add topic to the list of topic
+        List<Topics> currentTopics=article.getTopics();
+        currentTopics.add(topic);
+        article.setTopics(currentTopics);
 
-        if(!topicsRepository.findAll().contains(topic)){   // todo - avoid duplicate topics
-            topicsRepository.save(topic);
-        }
-        article.getTopics().add(topic);
-        //topic.getArticles().add(article);
-
-
+        //save topic
+        articlesRepository.save(article);
         return ResponseEntity.status(HttpStatus.CREATED).body(topic);
 
     }
 
 
     //methods PUT
-
 
 /**
      * update the given topic.
@@ -144,7 +157,10 @@ public class TopicsController {
      * @return action processed
      */
 
+//todo - don't delete the article when topic is suppressed
+
     @DeleteMapping("/topics/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Topics> deleteTopicById(@PathVariable Long id) {
         Topics topic = topicsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         topicsRepository.delete(topic);

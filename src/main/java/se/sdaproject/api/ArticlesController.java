@@ -1,9 +1,13 @@
-package se.sdaproject;
+package se.sdaproject.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.sdaproject.Articles;
+import se.sdaproject.ArticlesRepository;
+import se.sdaproject.api.exception.ResourceNotFoundException;
+import se.sdaproject.service.ArticlesService;
 
 import java.util.List;
 
@@ -13,12 +17,15 @@ public class ArticlesController {
 
     //fields
     ArticlesRepository articlesRepository;
+    ArticlesService articlesService;
+
+    public ArticlesController(ArticlesRepository articlesRepository, ArticlesService articlesService) {
+        this.articlesRepository = articlesRepository;
+        this.articlesService = articlesService;
+    }
 
     //constructor
     @Autowired
-    public ArticlesController(ArticlesRepository articlesRepository) {
-        this.articlesRepository = articlesRepository;
-    }
 
 
     //methods GET
@@ -70,9 +77,10 @@ public class ArticlesController {
      */
     @PutMapping ("/{id}")
     public ResponseEntity<Articles> updateArticleById(@PathVariable Long id, @RequestBody Articles updatedArticle ){
-        articlesRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        Articles article = articlesService.updateArticle(id,updatedArticle);
+        /*articlesRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         updatedArticle.setId(id);
-        Articles article = articlesRepository.save(updatedArticle);
+        Articles article = articlesRepository.save(updatedArticle);*/
         return ResponseEntity.ok(article);
     }
 

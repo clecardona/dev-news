@@ -24,10 +24,9 @@ public class Articles {
 
     @OneToMany(mappedBy = "relatedArticle", cascade = CascadeType.ALL)
     @JsonIgnore
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Comments> comments;
 
-    @ManyToMany(mappedBy = "articles")
+    @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Topics> topics;
 
@@ -38,11 +37,13 @@ public class Articles {
 
     }
 
-    public Articles(String title, String body, String authorName, List<Comments> comments, List<Topics> topicList) {
+    public Articles(long id, String title, String body, String authorName, List<Comments> comments, List<Topics> topics) {
+        this.id = id;
         this.title = title;
         this.body = body;
         this.authorName = authorName;
-
+        this.comments = comments;
+        this.topics = topics;
     }
 
     //getters and setters

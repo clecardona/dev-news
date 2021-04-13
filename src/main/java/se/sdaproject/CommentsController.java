@@ -3,6 +3,7 @@ package se.sdaproject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.sdaproject.api.exception.ResourceNotFoundException;
 
 import java.util.List;
 import javax.validation.Valid;
@@ -125,6 +126,7 @@ public class CommentsController {
      * @return action processed
      */
     @DeleteMapping("/comments/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Comments> deleteCommentById(@PathVariable Long id) {
         Comments comment = commentsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         commentsRepository.delete(comment);
