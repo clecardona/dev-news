@@ -1,9 +1,13 @@
-package se.sdaproject;
+package se.sdaproject.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.sdaproject.api.exception.ResourceNotFoundException;
+import se.sdaproject.model.Articles;
+import se.sdaproject.model.Topics;
+import se.sdaproject.repository.ArticlesRepository;
+import se.sdaproject.repository.TopicsRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,7 +41,7 @@ public class TopicsController {
 
 
 /**
-     * todo - return all topics associated with article given by articleId.
+     * return all topics associated with article given by articleId.
      * @return all topics
      */
 
@@ -53,7 +57,7 @@ public class TopicsController {
 
 
 /**
-     * todo - return all articles associated with the topic given by topicId.
+     * return all articles associated with the topic given by topicId.
      * @return all articles
      */
 
@@ -74,7 +78,7 @@ public class TopicsController {
     /**
      * create a new topic. duplicate names not allowed.
      *
-     * @param topic
+     * @param topic the topic to be added
      * @return process result
      */
     @PostMapping("/topics")
@@ -113,9 +117,22 @@ public class TopicsController {
         Articles article = articlesRepository
                 .findById(articleId)
                 .orElseThrow(ResourceNotFoundException::new);
+
         //add topic to the list of topic
-        List<Topics> currentTopics=article.getTopics();
-        currentTopics.add(topic);
+
+        List<Topics> currentTopics = article.getTopics();
+        //if topic exists
+        boolean topicExists = false;
+        for (Topics t : currentTopics) {
+            if (t.getName().equals(topic.getName())) {
+                topicExists = true;
+                break;
+            }
+        } // check if topic exists
+        if (!topicExists) {
+            // topic does not exists , create it.
+            currentTopics.add(topic);
+        }
         article.setTopics(currentTopics);
 
         //save topic
@@ -169,4 +186,26 @@ public class TopicsController {
     }
 
 
+    /**
+     * Delete the association of a topic for the given article.The topic & article themselves remain.
+     * @param articleId id of the article ro unassociate.
+     * @param topicId id of the topic to unassociate.
+     */
+    @DeleteMapping("/articles/{articleId}/topics/{topicId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAssociation(@PathVariable Long articleId, @PathVariable Long topicId) {
+
+        Articles article = articlesRepository.findById(articleId).orElseThrow(ResourceNotFoundException::new);
+        Topics topic = topicsRepository.findById(topicId).orElseThrow(ResourceNotFoundException::new);
+        if ( article.getTopics().contains(topic)){
+            article.getTopics().remove(topic);
+            articlesRepository.save(article);
+
+        }else{
+            throw  new ResourceNotFoundException();
+        }
+
+
+
+    }
 }

@@ -1,8 +1,6 @@
-package se.sdaproject;
+package se.sdaproject.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -42,6 +40,7 @@ public class Articles {
         this.title = title;
         this.body = body;
         this.authorName = authorName;
+
         this.comments = comments;
         this.topics = topics;
     }

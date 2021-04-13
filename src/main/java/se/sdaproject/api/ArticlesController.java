@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.sdaproject.Articles;
-import se.sdaproject.ArticlesRepository;
+import se.sdaproject.model.Articles;
+import se.sdaproject.repository.ArticlesRepository;
 import se.sdaproject.api.exception.ResourceNotFoundException;
 import se.sdaproject.service.ArticlesService;
 

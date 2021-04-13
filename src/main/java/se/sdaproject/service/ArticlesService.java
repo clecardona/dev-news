@@ -2,8 +2,8 @@ package se.sdaproject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.sdaproject.Articles;
-import se.sdaproject.ArticlesRepository;
+import se.sdaproject.model.Articles;
+import se.sdaproject.repository.ArticlesRepository;
 import se.sdaproject.api.exception.ResourceNotFoundException;
 
 @Service

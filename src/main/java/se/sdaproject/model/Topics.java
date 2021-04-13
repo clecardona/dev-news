@@ -1,4 +1,8 @@
-package se.sdaproject;
+package se.sdaproject.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -18,6 +22,8 @@ public class Topics {
 
 
     @ManyToMany (mappedBy = "topics",cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Articles> articles;
 
     //constructor
