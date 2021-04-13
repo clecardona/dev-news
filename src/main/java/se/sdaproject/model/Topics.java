@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 public class Topics {
 
+    // todo - make associated tables visible
 
     // fields : id, name, articles
     @Id
@@ -21,7 +22,7 @@ public class Topics {
     private String name;
 
 
-    @ManyToMany (mappedBy = "topics",cascade = CascadeType.ALL)
+    @ManyToMany (mappedBy = "topics")
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Articles> articles;

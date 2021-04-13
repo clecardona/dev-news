@@ -9,6 +9,10 @@ import java.util.List;
 @Entity
 public class Articles {
 
+
+    // todo - make associated tables visible
+
+
     // fields : id, title, body , authorName.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,7 @@ public class Articles {
     @JsonIgnore
     private List<Comments> comments;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL) //  owning side
     @JsonIgnore
     private List<Topics> topics;
 

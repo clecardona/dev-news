@@ -81,6 +81,7 @@ public class TopicsController {
      * @param topic the topic to be added
      * @return process result
      */
+    // todo - fix duplication
     @PostMapping("/topics")
     public ResponseEntity<Topics> createTopic(@RequestBody Topics topic) {
 
@@ -167,24 +168,17 @@ public class TopicsController {
     //methods DELETE
 
 
-/**
+    /**
      * delete the given topic.
-     *
      * @param id the given id
-     * @return action processed
      */
-
-//todo - don't delete the article when topic is suppressed
 
     @DeleteMapping("/topics/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Topics> deleteTopicById(@PathVariable Long id) {
+    public void deleteTopicById(@PathVariable Long id) {
         Topics topic = topicsRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         topicsRepository.delete(topic);
-
-        return ResponseEntity.ok(topic);
     }
-
 
     /**
      * Delete the association of a topic for the given article.The topic & article themselves remain.
@@ -204,8 +198,6 @@ public class TopicsController {
         }else{
             throw  new ResourceNotFoundException();
         }
-
-
-
     }
+
 }
